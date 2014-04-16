@@ -1,5 +1,5 @@
 class Scheduler
-  def perform
+  def perform(verbose = true)
     projects = Project.where(always_build: true).all
     projects.each do |project|
       last_build = project.last_build
@@ -8,7 +8,7 @@ class Scheduler
       interval = project.polling_interval
       if (last_build.created_at + interval.hours) < Time.now
         Build.create_from(last_build)
-        puts "."
+        puts "." if verbose
       end
     end
   end
